@@ -2,8 +2,9 @@ import pickle
 
 import pandas as pd
 import numpy as np
+import requests
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
-import xgboost as xgb
 
 from Ashare import get_price
 
@@ -15,7 +16,7 @@ class TrainModel:
     def data_convert(self, file_name):
         data = pd.read_csv(file_name)
         # 预处理：如去除缺失值、归一化等
-        data.fillna(method='ffill', inplace=True)
+        data.ffill()
         # 归一化价格和成交量数据
         scaler = MinMaxScaler()
         data[['Price', 'Volume']] = scaler.fit_transform(data[['Price', 'Volume']])
@@ -54,7 +55,7 @@ class TrainModel:
         # 划分训练集和测试集
 
         # 创建 XGBoost 模型
-        model = xgb.XGBClassifier()
+        model = RandomForestClassifier(n_estimators=100, random_state=42)
 
         # 训练模型
         model.fit(X_train, y_train)
@@ -81,14 +82,14 @@ class TrainModel:
         from sklearn.metrics import accuracy_score
 
         y_pred = self.load_model_predict(X_test)
-        # print(y_pred)
+        if y_pred[-1] == 1:
+            self.send_message_to_wechat(code)
         # print(y_test)
         # 输出预测结果与对应的时间
         data_test['Predicted_Sell_Point'] = y_pred  # 将预测的卖点添加到数据中
 
         # 只显示预测为卖点（Sell_Point = 1）的记录
         sell_points = data_test[data_test['Predicted_Sell_Point'] == 1]
-
         # 打印时间、卖点预测值和实际标签
         print('code:', code)
         print(sell_points[['time', 'Predicted_Sell_Point']].reset_index())
@@ -119,3 +120,38 @@ class TrainModel:
         csv_file_path = f'{code}.csv'
         df.to_csv(csv_file_path, index=True)  # index=False表示不保存DataFrame的索引
         print(f'数据已保存至 {csv_file_path}')
+
+    def send_message_to_wechat(self, code):
+        # 你的Server酱API密钥
+        SCKEY = 'SCT205498TVznAyJOnylNd4bE42tWSz3mp'
+
+        # 发送消息到钉钉的URL
+        url = f'https://sctapi.ftqq.com/{SCKEY}.send?channel=9'
+
+        # 要发送的消息内容，你可以根据Server酱的文档来格式化这个JSON
+        # 这里只是一个简单的示例
+        data = {
+            "text": f"code:{code}提示卖点"
+        }
+
+        # 发送POST请求
+        response = requests.post(url, data=data)
+
+        # 打印响应结果，检查是否发送成功
+        print(response.text)
+
+    def send_message2_wechat(self, title, content):
+        SCKEY = 'SCT205498TVznAyJOnylNd4bE42tWSz3mp'
+
+        # 发送消息到钉钉的URL
+        url = f'https://sctapi.ftqq.com/{SCKEY}.send?channel=9'
+
+        # 要发送的消息内容，你可以根据Server酱的文档来格式化这个JSON
+        # 这里只是一个简单的示例
+        data = {
+            "text": f"{title}",
+            "desp": f"{content}"
+        }
+
+        # 发送POST请求
+        response = requests.post(url, data=data)

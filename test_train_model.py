@@ -10,8 +10,12 @@ class TestTrainModel(TestCase):
         train_model.load_test_case(file_names)
         train_model.train_model()
 
-        train_model.code_sell_point('300499.XSHE')
-
+        train_model.code_sell_point('000548.XSHE')
 
     def test_save_data2(self):
         self.fail()
+
+
+    def test_send_message_to_wechat(self):
+        train_model = TrainModel()
+        train_model.send_message_to_wechat("300001")
