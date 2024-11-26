@@ -1,4 +1,5 @@
 import datetime
+import pickle
 
 import pandas as pd
 import numpy as np
@@ -30,14 +31,6 @@ def data_convert(file_name):
 
 
 # 读取多个 CSV 文件并合并
-def load_and_merge_data(file_names):
-    all_data = []
-    for file in file_names:
-        data = data_convert(file)
-        all_data.append(data)
-    # 合并所有数据
-    merged_data = pd.concat(all_data, axis=0, ignore_index=True)
-    return merged_data
 
 
 def save_data(code, sell_start, sell_end):
@@ -79,7 +72,7 @@ def code_sell_point(code):
     test_code = code
     sell_start_time = ''
     sell_end_time = ''
-    # save_data2(test_code)
+    save_data2(test_code)
     data_test = data_convert(f'{test_code}.csv')
     # 输入特征和目标变量
     X_test = data_test[features]
@@ -154,3 +147,14 @@ model = xgb.XGBClassifier()
 
 # 训练模型
 model.fit(X_train, y_train)
+
+# 保存模型到文件
+model_file = 'xgboost_model.pkl'
+pickle.dump(model, open(model_file, 'wb'))
+# 加载保存的模型
+loaded_model = pickle.load(open(model_file, 'rb'))
+#
+# # 使用加载的模型进行预测
+# predictions = loaded_model.predict(X_test)
+
+
