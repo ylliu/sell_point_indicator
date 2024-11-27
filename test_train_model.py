@@ -11,8 +11,8 @@ class TestTrainModel(TestCase):
         train_model.load_test_case(file_names)
         train_model.train_model()
 
-        train_model.code_sell_point('601360.XSHG')
-        # train_model.code_sell_point('300450.XSHE')
+        # train_model.code_sell_point('bj832175')
+        train_model.code_sell_point('300450.XSHE')
 
     def test_save_data2(self):
         self.fail()
@@ -32,11 +32,22 @@ class TestTrainModel(TestCase):
         train_model.train_model()
 
         train_model.save_data('002156.XSHE',
-                              datetime.datetime.strptime('2024-11-27 10:57:00', '%Y-%m-%d %H:%M:%S'),
-                              datetime.datetime.strptime('2024-11-27 11:01:00', '%Y-%m-%d %H:%M:%S'))
+                              '2024-11-27 10:57:00',
+                              '2024-11-27 11:01:00', "Sell_Point")
         train_model.retrain_with_all_data()
         train_model.code_sell_point('300703.XSHE')
 
     def test_get_all_test_csv(self):
         train_model = TrainModel()
-        train_model.get_all_test_csv()
+        train_model.get_all_test_csv('')
+
+    def test_should_save_buy_point_data(self):
+        train_model = TrainModel()
+        train_model.save_data('300822.XSHE', '2024-11-27 9:44:00', '2024-11-27 9:48:00', train_model.BUY_POINT)
+        train_model.save_data('301011.XSHE', '2024-11-27 9:54:00', '2024-11-27 10:03:00', train_model.BUY_POINT)
+        train_model.save_data('300220.XSHE', '2024-11-27 9:48:00', '2024-11-27 9:57:00', train_model.BUY_POINT)
+        train_model.save_data('300459.XSHE', '2024-11-27 9:42:00', '2024-11-27 9:53:00', train_model.BUY_POINT)
+        # train_model.save_data('600250.XSHG', '2024-11-27 9:20:00', '2024-11-27 9:20:00', train_model.BUY_POINT)
+        # train_model.save_data('002054.XSHE', '2024-11-27 9:20:00', '2024-11-27 9:20:00', train_model.BUY_POINT)
+        train_model.train_with_all_buy_data()
+        train_model.code_buy_point('832175.BJ')

@@ -1,5 +1,6 @@
 import os
 import pickle
+from datetime import datetime
 
 import pandas as pd
 import numpy as np
@@ -11,7 +12,11 @@ from Ashare import get_price
 
 class TrainModel:
     def __init__(self):
+        self.sell_model_file = None
         self.features = ['Price', 'Volume', 'SMA5', 'Price_change', 'Volume_change']
+        self.BUY_POINT = "Buy_Point"
+        self.SELL_POINT = "Sell_Point"
+        self.buy_model_file = None
 
     def data_convert(self, file_name):
         data = pd.read_csv(file_name)
@@ -61,11 +66,11 @@ class TrainModel:
         model.fit(X_train, y_train)
 
         # 保存模型到文件
-        self.model_file = 'sell_point_model.pkl'
-        pickle.dump(model, open(self.model_file, 'wb'))
+        self.sell_model_file = 'sell_point_model.pkl'
+        pickle.dump(model, open(self.sell_model_file, 'wb'))
 
     def load_model_predict(self, x_input):
-        loaded_model = pickle.load(open(self.model_file, 'rb'))
+        loaded_model = pickle.load(open(self.sell_model_file, 'rb'))
 
         # 使用加载的模型进行预测
         predictions = loaded_model.predict(x_input)
@@ -94,7 +99,9 @@ class TrainModel:
         print('code:', code)
         print(sell_points[['time', 'Predicted_Sell_Point']].reset_index())
 
-    def save_data(self, code, sell_start, sell_end):
+    def save_data(self, code, sell_start, sell_end, action_type):
+        sell_start = datetime.strptime(sell_start, '%Y-%m-%d %H:%M:%S')
+        sell_end = datetime.strptime(sell_end, '%Y-%m-%d %H:%M:%S')
         df = get_price(code, frequency='1m', count=241)  # 支持'1m','5m','15m','30m','60m'
         last_index = df.index[-1]
         df = df.drop(last_index)
@@ -103,8 +110,11 @@ class TrainModel:
         df.rename(columns={'close': 'Price', 'volume': 'Volume'}, inplace=True)
         sell_mask = (df.index >= sell_start) & (df.index <= sell_end)
         # 保存DataFrame为CSV文件
-        df['Sell_Point'] = sell_mask.astype(int)
-        csv_file_path = f'./test/{code}.csv'
+        df[action_type] = sell_mask.astype(int)
+        if action_type == self.BUY_POINT:
+            csv_file_path = f'./test/buy/{code}.csv'
+        else:
+            csv_file_path = f'./test/{code}.csv'
         df.to_csv(csv_file_path, index=True)  # index=False表示不保存DataFrame的索引
         print(f'数据已保存至 {csv_file_path}')
         return csv_file_path
@@ -160,9 +170,11 @@ class TrainModel:
 
         pass
 
-    def get_all_test_csv(self):
+    def get_all_test_csv(self, type):
         # 指定目录路径
         directory = 'test'
+        if type == self.BUY_POINT:
+            directory = 'test/buy'
 
         # 初始化一个空列表来存储CSV文件的路径
         csv_files = []
@@ -179,6 +191,59 @@ class TrainModel:
         return csv_files
 
     def retrain_with_all_data(self):
-        file_names = self.get_all_test_csv()
+        file_names = self.get_all_test_csv(self.SELL_POINT)
         self.load_test_case(file_names)
         self.train_model()
+
+    def train_with_all_buy_data(self):
+        file_names = self.get_all_test_csv(self.BUY_POINT)
+        self.load_test_case(file_names)
+        self.train_buy_model()
+
+    def train_buy_model(self):
+        X = self.data[self.features]
+        y = self.data[self.BUY_POINT]  # 卖点标签（1 为卖点，0 为非卖点）
+        X_train = X
+        y_train = y
+        # 划分训练集和测试集
+
+        # 创建 XGBoost 模型
+        model = RandomForestClassifier(n_estimators=100, random_state=42)
+        # model = xgb.XGBClassifier()
+        # 训练模型
+        model.fit(X_train, y_train)
+
+        # 保存模型到文件
+        self.buy_model_file = 'buy_point_model.pkl'
+        pickle.dump(model, open(self.buy_model_file, 'wb'))
+
+    def load_buy_model_predict(self, x_input):
+        loaded_model = pickle.load(open(self.buy_model_file, 'rb'))
+
+        # 使用加载的模型进行预测
+        predictions = loaded_model.predict(x_input)
+        return predictions
+
+    def code_buy_point(self,code):
+        test_code = code
+        self.save_data2(test_code)
+        data_test = self.data_convert(f'{test_code}.csv')
+        # 输入特征和目标变量
+        X_test = data_test[self.features]
+
+        # 评估模型
+        from sklearn.metrics import accuracy_score
+
+        y_pred = self.load_buy_model_predict(X_test)
+        if y_pred[-1] == 1:
+            self.send_message_to_wechat(code)
+        # print(y_test)
+        # 输出预测结果与对应的时间
+        point = 'Predicted_Buy_Point'
+        data_test[('%s' % point)] = y_pred  # 将预测的卖点添加到数据中
+
+        # 只显示预测为卖点（Sell_Point = 1）的记录
+        sell_points = data_test[data_test[point] == 1]
+        # 打印时间、卖点预测值和实际标签
+        print('code:', code)
+        print(sell_points[['time', point]].reset_index())
