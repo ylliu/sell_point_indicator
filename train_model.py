@@ -103,9 +103,10 @@ class TrainModel:
         sell_mask = (df.index >= sell_start) & (df.index <= sell_end)
         # 保存DataFrame为CSV文件
         df['Sell_Point'] = sell_mask.astype(int)
-        csv_file_path = f'{code}.csv'
+        csv_file_path = f'./test/{code}.csv'
         df.to_csv(csv_file_path, index=True)  # index=False表示不保存DataFrame的索引
         print(f'数据已保存至 {csv_file_path}')
+        return csv_file_path
 
     def save_data2(self, code):
         df = get_price(code, frequency='1m', count=241)  # 支持'1m','5m','15m','30m','60m'
@@ -153,3 +154,7 @@ class TrainModel:
 
         # 发送POST请求
         response = requests.post(url, data=data)
+
+    def train_use_new_file(self, new_file):
+
+        pass
