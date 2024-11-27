@@ -10,7 +10,7 @@ if __name__ == "__main__":
     train_model.train_model()
     send_times = [8, 12, 15, 20]
     while True:
-        to_monitor_code = ['601360.XSHG', '000548.XSHE', '301171.XSHE']
+        to_monitor_code = ['601360.XSHG', '000548.XSHE', '301171.XSHE', '300058.XSHE']
         for code in to_monitor_code:
             train_model.code_sell_point(code)
         time.sleep(60)
