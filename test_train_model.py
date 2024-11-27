@@ -31,7 +31,12 @@ class TestTrainModel(TestCase):
         train_model.load_test_case(file_names)
         train_model.train_model()
 
-        csv_file =train_model.save_data('002156.XSHE', datetime.datetime.strptime('2024-11-27 10:57:00', '%Y-%m-%d %H:%M:%S'),
+        train_model.save_data('002156.XSHE',
+                              datetime.datetime.strptime('2024-11-27 10:57:00', '%Y-%m-%d %H:%M:%S'),
                               datetime.datetime.strptime('2024-11-27 11:01:00', '%Y-%m-%d %H:%M:%S'))
-        train_model.train_use_new_file(csv_file)
-        train_model.code_sell_point('688981.XSHG')
+        train_model.retrain_with_all_data()
+        train_model.code_sell_point('300703.XSHE')
+
+    def test_get_all_test_csv(self):
+        train_model = TrainModel()
+        train_model.get_all_test_csv()

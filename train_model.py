@@ -1,3 +1,4 @@
+import os
 import pickle
 
 import pandas as pd
@@ -60,7 +61,7 @@ class TrainModel:
         model.fit(X_train, y_train)
 
         # 保存模型到文件
-        self.model_file = 'xgboost_model.pkl'
+        self.model_file = 'sell_point_model.pkl'
         pickle.dump(model, open(self.model_file, 'wb'))
 
     def load_model_predict(self, x_input):
@@ -158,3 +159,26 @@ class TrainModel:
     def train_use_new_file(self, new_file):
 
         pass
+
+    def get_all_test_csv(self):
+        # 指定目录路径
+        directory = 'test'
+
+        # 初始化一个空列表来存储CSV文件的路径
+        csv_files = []
+
+        # 遍历目录中的所有文件和子目录
+        for root, dirs, files in os.walk(directory):
+            for file in files:
+                # 检查文件扩展名是否为.csv
+                if file.endswith('.csv'):
+                    csv_files.append(os.path.join(root, file))
+
+        # 打印找到的CSV文件路径
+        print(csv_files)
+        return csv_files
+
+    def retrain_with_all_data(self):
+        file_names = self.get_all_test_csv()
+        self.load_test_case(file_names)
+        self.train_model()
