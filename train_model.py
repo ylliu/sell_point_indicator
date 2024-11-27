@@ -5,7 +5,6 @@ import numpy as np
 import requests
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
-
 from Ashare import get_price
 
 
@@ -56,7 +55,7 @@ class TrainModel:
 
         # 创建 XGBoost 模型
         model = RandomForestClassifier(n_estimators=100, random_state=42)
-
+        # model = xgb.XGBClassifier()
         # 训练模型
         model.fit(X_train, y_train)
 
@@ -140,7 +139,7 @@ class TrainModel:
         # 打印响应结果，检查是否发送成功
         print(response.text)
 
-    def send_message2_wechat(self, title, content):
+    def send_message2_wechat(self, title):
         SCKEY = 'SCT205498TVznAyJOnylNd4bE42tWSz3mp'
 
         # 发送消息到钉钉的URL
@@ -150,7 +149,6 @@ class TrainModel:
         # 这里只是一个简单的示例
         data = {
             "text": f"{title}",
-            "desp": f"{content}"
         }
 
         # 发送POST请求
