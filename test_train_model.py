@@ -35,7 +35,7 @@ class TestTrainModel(TestCase):
                               '2024-11-28 9:37:00',
                               '2024-11-28 9:40:00', "Sell_Point")
         train_model.retrain_with_all_data()
-        train_model.code_sell_point('002131.XSHE')
+        train_model.code_sell_point('002312.XSHE')
 
     def test_get_all_test_csv(self):
         train_model = TrainModel()
