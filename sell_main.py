@@ -5,9 +5,7 @@ from train_model import TrainModel
 
 if __name__ == "__main__":
     train_model = TrainModel()
-    file_names = ['./test/601360.csv', './test/301171.csv', './test/300785.csv', './test/300450.csv']  # 添加你的文件名
-    train_model.load_test_case(file_names)
-    train_model.train_model()
+    train_model.retrain_with_all_data()
     send_times = [8, 12, 15, 20]
     to_monitor_code = ['601360.XSHG', '000548.XSHE', '301171.XSHE', '002131.XSHE']
     while True:
