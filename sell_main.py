@@ -5,17 +5,21 @@ from train_model import TrainModel
 
 if __name__ == "__main__":
     train_model = TrainModel()
-    file_names = ['601360.csv', '301171.csv', '300785.csv', '300450.csv']  # 添加你的文件名
+    file_names = ['./test/601360.csv', './test/301171.csv', './test/300785.csv', './test/300450.csv']  # 添加你的文件名
     train_model.load_test_case(file_names)
     train_model.train_model()
     send_times = [8, 12, 15, 20]
+    to_monitor_code = ['601360.XSHG', '000548.XSHE', '301171.XSHE', '002131.XSHE']
     while True:
-        to_monitor_code = ['601360.XSHG', '000548.XSHE', '301171.XSHE', '002131.XSHE']
-        for code in to_monitor_code:
-            train_model.code_sell_point(code)
-        time.sleep(60)
+        # 获取当前时间
         current_time = datetime.now()
         current_hour = current_time.hour
         current_minute = current_time.minute
-        if current_hour in send_times and current_minute == 0:  # 确保是整点
-            train_model.send_message2_wechat("卖点助手在线中")
+        print('monitoring')
+        current_time_str = current_time.strftime('%H:%M')
+        if '09:30' <= current_time_str < '11:30' or '13:00' <= current_time_str < '15:00':
+            for code in to_monitor_code:
+                train_model.code_sell_point(code)
+            if current_hour in send_times and current_minute == 0:  # 确保是整点
+                train_model.send_message2_wechat("卖点助手在线中")
+        time.sleep(60)
