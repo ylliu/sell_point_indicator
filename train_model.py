@@ -114,7 +114,7 @@ class TrainModel:
         if action_type == self.BUY_POINT:
             csv_file_path = f'./test/buy/{code}.csv'
         else:
-            csv_file_path = f'./test/{code}.csv'
+            csv_file_path = f'./test/sell/{code}.csv'
         df.to_csv(csv_file_path, index=True)  # index=False表示不保存DataFrame的索引
         print(f'数据已保存至 {csv_file_path}')
         return csv_file_path
@@ -175,7 +175,8 @@ class TrainModel:
         directory = 'test'
         if type == self.BUY_POINT:
             directory = 'test/buy'
-
+        if type == self.SELL_POINT:
+            directory = 'test/sell'
         # 初始化一个空列表来存储CSV文件的路径
         csv_files = []
 
