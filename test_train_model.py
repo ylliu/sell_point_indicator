@@ -26,15 +26,15 @@ class TestTrainModel(TestCase):
 
     def test_should_train_model_use_new_files(self):
         train_model = TrainModel()
-        file_names = ['test/sell/601360.csv', 'test/sell/301171.csv', 'test/sell/300785.csv']  # 添加你的文件名
-        train_model.load_test_case(file_names)
-        train_model.train_model()
+        # file_names = ['test/sell/601360.csv', 'test/sell/301171.csv', 'test/sell/300785.csv']  # 添加你的文件名
+        # train_model.load_test_case(file_names)
+        # train_model.train_model()
 
-        train_model.save_data('002131.XSHE',
-                              '2024-11-28 9:37:00',
-                              '2024-11-28 9:40:00', "Sell_Point")
+        train_model.save_data('002416.XSHE',
+                              '2024-11-28 9:51:00',
+                              '2024-11-28 9:54:00', "Sell_Point")
         train_model.retrain_with_all_data()
-        train_model.code_sell_point('002312.XSHE')
+        train_model.code_sell_point('002469.XSHE')
 
     def test_get_all_test_csv(self):
         train_model = TrainModel()
