@@ -97,7 +97,7 @@ class TrainModel:
 
     def code_sell_point(self, code):
         test_code = code
-        self.save_data2(test_code)
+        self.save_data2(test_code, 200)
         data_test = self.data_convert(f'{test_code}.csv')
         # 输入特征和目标变量
         X_test = data_test[self.features]
@@ -173,8 +173,8 @@ class TrainModel:
         print(f'数据已保存至 {csv_file_path}')
         return csv_file_path
 
-    def save_data2(self, code):
-        df = get_price(code, frequency='1m', count=500)  # 支持'1m','5m','15m','30m','60m'
+    def save_data2(self, code, size):
+        df = get_price(code, frequency='1m', count=size)  # 支持'1m','5m','15m','30m','60m'
         print(df)
         last_index = df.index[-1]
         df = df.drop(last_index)
@@ -282,7 +282,7 @@ class TrainModel:
 
     def code_buy_point(self, code):
         test_code = code
-        self.save_data2(test_code)
+        self.save_data2(test_code, 241)
         data_test = self.data_convert(f'{test_code}.csv')
         # 输入特征和目标变量
         X_test = data_test[self.features]
