@@ -10,7 +10,7 @@ class TestTrainModel(TestCase):
         train_model = TrainModel()
         train_model.retrain_with_all_data()
         # train_model.code_sell_point('bj832175')
-        train_model.code_sell_point('sh600779')
+        train_model.code_sell_point('sz001308')
 
     def test_save_data2(self):
         train_model = TrainModel()
@@ -58,8 +58,8 @@ class TestTrainModel(TestCase):
     def test_simulate_market_by_minute(self):
         train_model = TrainModel()
         train_model.retrain_with_all_data()
-        code = 'sz300058'
-        train_model.save_data2(code, 500)
+        code = 'sz002862'
+        train_model.save_data2(code,500)
         clock = SimulatedClock()
         time = clock.get_current_time()
         while not clock.is_time_to_end():
