@@ -131,6 +131,7 @@ class TrainModel:
             sell_points = data_test[data_test['Predicted_Sell_Point'] == 1]
             # 打印时间、卖点预测值和实际标签
             print(sell_points[['time', 'Predicted_Sell_Point']].reset_index())
+            print()
 
     def code_sell_point_use_file(self, csv_file):
 

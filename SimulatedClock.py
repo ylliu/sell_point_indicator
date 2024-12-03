@@ -4,8 +4,8 @@ import datetime
 class SimulatedClock:
     def __init__(self, start_time=None):
         # 默认时间从2024-11-29 09:30:00开始
-        self.current_time = start_time or datetime.datetime(2024, 11, 29, 9, 30, 0)
-        self.end_time = datetime.datetime(2024, 11, 29, 15, 0, 0)  # 模拟结束时间为15:00
+        self.current_time = start_time or datetime.datetime(2024, 12, 2, 9, 30, 0)
+        self.end_time = datetime.datetime(2024, 12, 2, 15, 0, 0)  # 模拟结束时间为15:00
 
     def next(self):
         """

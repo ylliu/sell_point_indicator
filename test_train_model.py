@@ -14,7 +14,7 @@ class TestTrainModel(TestCase):
 
     def test_save_data2(self):
         train_model = TrainModel()
-        train_model.save_data2('sz300058',241)
+        train_model.save_data2('sz300058', 241)
 
     def test_send_message_to_wechat(self):
         train_model = TrainModel()
@@ -42,14 +42,11 @@ class TestTrainModel(TestCase):
 
     def test_should_save_buy_point_data(self):
         train_model = TrainModel()
-        train_model.save_data('300822.XSHE', '2024-11-27 9:44:00', '2024-11-27 9:48:00', train_model.BUY_POINT)
-        train_model.save_data('301011.XSHE', '2024-11-27 9:54:00', '2024-11-27 10:03:00', train_model.BUY_POINT)
-        train_model.save_data('300220.XSHE', '2024-11-27 9:48:00', '2024-11-27 9:57:00', train_model.BUY_POINT)
-        train_model.save_data('300459.XSHE', '2024-11-27 9:42:00', '2024-11-27 9:53:00', train_model.BUY_POINT)
-        train_model.save_data('300561.XSHE', '2024-11-28 9:50:00', '2024-11-28 9:53:00', train_model.BUY_POINT)
-        train_model.save_data('300716.XSHE', '2024-11-28 9:30:00', '2024-11-28 9:34:00', train_model.BUY_POINT)
+        train_model.save_data('sz300561', '2024-12-02 9:32:00', '2024-12-02 9:34:00', train_model.BUY_POINT)
+        train_model.save_data('sz300033', '2024-12-02 10:20:00', '2024-12-02 10:23:00', train_model.BUY_POINT)
+        train_model.save_data('sh600206', '2024-12-02 9:38:00', '2024-12-02 9:40:00', train_model.BUY_POINT)
         train_model.train_with_all_buy_data()
-        train_model.code_buy_point('300716.XSHE')
+        train_model.code_buy_point('sh600206')
 
     def test_code_sell_point_use_file(self):
         train_model = TrainModel()
@@ -61,12 +58,12 @@ class TestTrainModel(TestCase):
     def test_simulate_market_by_minute(self):
         train_model = TrainModel()
         train_model.retrain_with_all_data()
-        code = 'sh600779'
-        train_model.save_data2(code,500)
+        code = 'sz300058'
+        train_model.save_data2(code, 500)
         clock = SimulatedClock()
         time = clock.get_current_time()
         while not clock.is_time_to_end():
-            df = train_model.get_time_series_data('%s.csv' % code, time,241)
+            df = train_model.get_time_series_data('%s.csv' % code, time, 241)
             train_model.code_sell_point_use_date(df, code)
             time = clock.next()
 
