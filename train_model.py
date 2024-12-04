@@ -97,7 +97,7 @@ class TrainModel:
 
     def code_sell_point(self, code):
         test_code = code
-        self.save_data2(test_code, 200)
+        self.save_data2(test_code, 241)
         data_test = self.data_convert(f'{test_code}.csv')
         # 输入特征和目标变量
         X_test = data_test[self.features]

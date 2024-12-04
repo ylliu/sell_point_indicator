@@ -46,7 +46,7 @@ class TestTrainModel(TestCase):
         train_model.save_data('sz300033', '2024-12-02 10:20:00', '2024-12-02 10:23:00', train_model.BUY_POINT)
         train_model.save_data('sh600206', '2024-12-02 9:38:00', '2024-12-02 9:40:00', train_model.BUY_POINT)
         train_model.train_with_all_buy_data()
-        train_model.code_buy_point('sh600206')
+        train_model.code_buy_point('sz300561')
 
     def test_code_sell_point_use_file(self):
         train_model = TrainModel()
