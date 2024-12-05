@@ -7,7 +7,7 @@ if __name__ == "__main__":
     train_model = TrainModel()
     train_model.retrain_with_all_data()
     send_times = [8, 12, 15, 20]
-    to_monitor_code = ['sz300561']
+    to_monitor_code = ['sz300561', 'sh600171', 'sz000753', 'sh600410']
     while True:
         # 获取当前时间
         current_time = datetime.now()

@@ -14,7 +14,7 @@ class TestTrainModel(TestCase):
 
     def test_save_data2(self):
         train_model = TrainModel()
-        train_model.save_data2('sz300058', 241)
+        train_model.save_data2('sh600171', 241)
 
     def test_send_message_to_wechat(self):
         train_model = TrainModel()
